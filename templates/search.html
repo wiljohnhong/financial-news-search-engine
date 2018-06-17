@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Financial News Search Engine</title>
+    <style type="text/css">
+    body {
+       background-size: cover;
+       font-family: 'Open Sans', sans-serif;
+       font-size: 100%;
+    }
+        #main{
+		position:relative;
+	}
+        .content{
+		display:inline-block
+	}
+	#doc{
+		width:65%;
+		border-right:3px solid gray;
+	}
+	#recommend{
+		position:absolute;
+		width:30%;
+		height:100%;
+		left:65%;
+		top:10px;
+        font-size: 70%;
+	}
+    .pagination-page-info {
+        padding: .9em;
+        padding-left: 0;
+        width: 40em;
+        margin: .5em;
+        margin-left: 0;
+        font-size: 12px;
+    }
+    .pagination-page-info b {
+        color: black;
+        background: #6aa6ed;
+        padding-left: 5px;
+        padding: .1em .25em;
+        font-size: 150%;
+    }
+    .atop{
+        color:#080; /*无链接时颜色*/
+        text-decoration:none;
+    }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="header">
+            <h1>Financial News Search Engine</h1>
+            <form name="search" action="/search/" method="POST">
+                <p>
+                    {% if key %}
+                        <input type="text" name="keys" value="{{key}}">
+                    {% else %}
+                        <input type="text" name="keys">
+                    {% endif %}
+                    <input type="submit" value="Search">
+                    <br>
+                    <br>
+                  Select Year:
+                  <input type="radio" name="year" value="All" checked>All
+                  <input type="radio" name="year" value="2015">2015
+                  <input type="radio" name="year" value="2016">2016
+                  <input type="radio" name="year" value="2017">2017
+                  <input type="radio" name="year" value="2018">2018
+                  <br>
+                  Search in:
+                  <input type="radio" name="method" value="title" checked>Title
+                  <input type="radio" name="method" value="fulltext">Full Text
+                </p>
+            </form>
+        </div>
+        <hr/>
+
+    <div id = "main">
+        {% if correct%}
+            {% for doc in docs%}
+            <div id="doc" class="content">
+                <ul id="navigation" style="width: 70%">
+                    <p><a href="/search/{{doc.id}}/" target="_blank">{{doc.title}}</a>
+                    {{doc.time}}<br/>{{doc.snippet}}<br/>
+                    <a class="atop" href="{{ doc.url }}" target="_blank">{{doc.url}}</a>
+                    </p>
+                </ul>
+            </div>
+            <br/>
+            {% endfor %}
+            <div id = 'recommend' >
+                <p style="font-size: 2em; text-align: center">
+                    推荐阅读
+                </p>
+                {% for reco in recos%}
+                <div id="recommends" class="content">
+                    <ul id="navigation">
+                        <p style="font-size: 1.2em">
+                            <big><a href="/search/{{reco.id}}/" target="_blank">{{reco.title}}</a></big>
+                        </p>
+                    </ul>
+                </div>
+                {% endfor %}
+			</div>
+    </div>
+        {% block next %}
+        <ul>
+            {% for i in page %}
+                <a href="/search/page/{{i}}/">{{i}}</a>&nbsp;
+            {% endfor %}
+        </ul>
+        {% endblock %}
+        {% else %}
+            <p>Sorry，Can't Find the Content You Want！</p>
+        {% endif %}
+
+
+		<div id="footer">
+			<hr>
+            &copy; 2018@<a target="_blank">Group 27</a>
+        </div>
+
+    </div>
+</body>
+</html>
